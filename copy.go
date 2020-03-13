@@ -2,6 +2,7 @@ package cpfile
 
 import (
 	"errors"
+	"github.com/cheggaaa/pb/v3"
 	"io"
 	"log"
 	"os"
@@ -50,6 +51,7 @@ func Copy(from string, to string, limit int64, offset int64) error {
 
 	buf := make([]byte, BUFFERSIZE)
 	ownLimit := int64(0)
+	bar := pb.StartNew(int(ownLimit))
 	for {
 		n, err := f.Read(buf)
 		if err != nil && err != io.EOF {
@@ -71,6 +73,7 @@ func Copy(from string, to string, limit int64, offset int64) error {
 		if ownLimit >= limit {
 			break
 		}
+		bar.Increment()
 	}
 
 	return nil
